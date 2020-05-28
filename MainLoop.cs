@@ -6,7 +6,7 @@ using Console = SadConsole.Console;
 namespace urukx
 {
 
-    class Program
+    class MainLoop
     {
         public const int height = 25;
         public const int width = 80;
@@ -40,6 +40,26 @@ namespace urukx
             if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F5))
             {
                 SadConsole.Settings.ToggleFullScreen();
+            }
+
+            if ((SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Up)) || (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.K)))
+            {
+                player.Position += new Point(0, -1);
+            }
+
+            if ((SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down)) || (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.J)))
+            {
+                player.Position += new Point(0, 1);
+            }
+
+            if ((SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Left)) || (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.H)))
+            {
+                player.Position += new Point(-1, 0);
+            }
+
+            if ((SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Right)) || (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.L)))
+            {
+                player.Position += new Point(1, 0);
             }
         }
 
