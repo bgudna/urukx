@@ -3,17 +3,18 @@ using SadConsole;
 using Microsoft.Xna.Framework;
 using Console = SadConsole.Console;
 
-namespace urukx
-{
+namespace urukx {
 
-    class MainLoop
-    {
+    class MainLoop {
         public const int height = 25;
         public const int width = 80;
         private static SadConsole.Entities.Entity player;
 
-        static void Main()
-        {
+        private static Tiles[] _allTiles;
+        private const int _roomWidth = 10;
+        private const int _roomHeight = 20;
+
+        static void Main() {
             // Setup the engine and create the main window.
             SadConsole.Game.Create(width, height);
 
@@ -34,8 +35,23 @@ namespace urukx
             player.Position = new Point(20,10);
         }
 
-        private static void Update(GameTime time)
-        {
+        private static void createFloorsPlz() {
+            for(int x = 0; x < _roomWidth; x++) {
+                for(int y = 0; y < _roomHeight; y++) {
+                    _allTiles[y * width + x] = new Tiles4Floors();
+                }
+            }
+        }
+
+        private static void createWallsPlz() {
+            _allTiles = new Tiles[width * height];
+
+            for(int i = 0;i < _allTiles.Length; i++) {
+                _allTiles[i] = new Tiles4Walls();
+            }
+        }
+
+        private static void Update(GameTime time) {
             
             if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F5))
             {
@@ -63,12 +79,13 @@ namespace urukx
             }
         }
 
-        static void Init()
-        {
-            var console = new Console(width, height);
+        static void Init() {
+            createWallsPlz();
+            createFloorsPlz();
+            var console = new ScrollingConsole(width, height, Global.FontDefault, new Rectangle(0, 0, width, height), _allTiles);
             //console.FillWithRandomGarbage();
-            console.Fill(new Rectangle(3, 3, 23, 3), Color.Violet, Color.Black, 0, 0);
-            console.Print(4, 4, "haro haro");
+            // console.Fill(new Rectangle(3, 3, 23, 3), Color.Violet, Color.Black, 0, 0);
+            // console.Print(4, 4, "haro haro");
 
             SadConsole.Global.CurrentScreen = console;
 
