@@ -83,7 +83,7 @@ namespace urukx {
             if (location.X < 0 || location.Y < 0 || location.X >= width || location.Y >= height)
                 return false;
             // then return whether the tile is walkable
-            return !_allTiles[location.Y * width + location.X].IsBlockingMove;
+            return !_allTiles[location.Y * width + location.X].IsBlockingMovement;
         }
 
         private static void Update(GameTime time) {
