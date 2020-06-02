@@ -8,7 +8,7 @@ namespace urukx {
     class MainLoop {
         public const int height = 25;
         public const int width = 80;
-        private static SadConsole.Entities.Entity player;
+        private static Hero player;
 
         private static Tiles[] _allTiles;
         private const int _roomWidth = 10;
@@ -29,9 +29,7 @@ namespace urukx {
         }
 
         private static void createPlayerPlz() {
-            player = new SadConsole.Entities.Entity(1,1);
-            player.Animation.CurrentFrame[0].Glyph = '@';
-            player.Animation.CurrentFrame[0].Foreground = Color.BlueViolet;
+            player = new Hero(Color.YellowGreen, Color.Transparent);
             player.Position = new Point(20,10);
         }
 
@@ -51,8 +49,7 @@ namespace urukx {
             }
         }
 
-        private static void Update(GameTime time) {
-            
+        private static void Check4Input() {
             if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F5))
             {
                 SadConsole.Settings.ToggleFullScreen();
@@ -60,23 +57,37 @@ namespace urukx {
 
             if ((SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Up)) || (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.K)))
             {
-                player.Position += new Point(0, -1);
+                player.MoveBy(new Point(0, -1));
             }
 
             if ((SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down)) || (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.J)))
             {
-                player.Position += new Point(0, 1);
+                player.MoveBy(new Point(0, 1));
             }
 
             if ((SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Left)) || (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.H)))
             {
-                player.Position += new Point(-1, 0);
+                player.MoveBy(new Point(-1, 0));
             }
 
             if ((SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Right)) || (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.L)))
             {
-                player.Position += new Point(1, 0);
+                player.MoveBy(new Point(1, 0));
             }
+        }
+
+         public static bool IsTileWalkable(Point location)
+        {
+            // first make sure that actor isn't trying to move
+            // off the limits of the map
+            if (location.X < 0 || location.Y < 0 || location.X >= width || location.Y >= height)
+                return false;
+            // then return whether the tile is walkable
+            return !_allTiles[location.Y * width + location.X].IsBlockingMove;
+        }
+
+        private static void Update(GameTime time) {
+            Check4Input();
         }
 
         static void Init() {
