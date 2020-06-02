@@ -30,7 +30,7 @@ namespace urukx {
 
         private static void createPlayerPlz() {
             player = new Hero(Color.YellowGreen, Color.Transparent);
-            player.Position = new Point(20,10);
+            player.Position = new Point(5,5);
         }
 
         private static void createFloorsPlz() {

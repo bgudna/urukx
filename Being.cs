@@ -25,8 +25,13 @@ namespace urukx {
 
         public bool MoveBy(Point positionChange)
         {
-            Position += positionChange;
-            return true;
+            if(urukx.MainLoop.IsTileWalkable(Position + positionChange)) {
+                Position += positionChange;
+                return true;
+            } else {
+                return false;
+            }
+            
         }
 
         // Moves the Actor TO newPosition location
