@@ -25,7 +25,7 @@ namespace urukx {
 
         public bool MoveBy(Point positionChange)
         {
-            if(urukx.MainLoop.IsTileWalkable(Position + positionChange)) {
+            if(MainLoop.GameMap.IsTileWalkable(Position + positionChange)) {
                 Position += positionChange;
                 return true;
             } else {
