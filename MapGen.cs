@@ -61,11 +61,50 @@ namespace urukx
                 CreateRoom(room);
             }
 
+            // carve out tunnels between all rooms
+            // based on the Positions of their centers
+            for (int r = 1; r < Rooms.Count; r++)
+            {
+                //for all remaining rooms get the center of the room and the previous room
+                Point previousRoomCenter = Rooms[r - 1].Center;
+                Point currentRoomCenter = Rooms[r].Center;
+
+                // give a 50/50 chance of which 'L' shaped connecting hallway to tunnel out
+                if (randNum.Next(1, 2) == 1)
+                {
+                    CreateHorizontalTunnel(previousRoomCenter.X, currentRoomCenter.X, previousRoomCenter.Y);
+                    CreateVerticalTunnel(previousRoomCenter.Y, currentRoomCenter.Y, currentRoomCenter.X);
+                }
+                else
+                {
+                    CreateVerticalTunnel(previousRoomCenter.Y, currentRoomCenter.Y, previousRoomCenter.X);
+                    CreateHorizontalTunnel(previousRoomCenter.X, currentRoomCenter.X, currentRoomCenter.Y);
+                }
+            }
+
             // spit out the final map
             return _map;
         }
 
-            // Builds a room composed of walls and floors using the supplied Rectangle
+        // carve a tunnel out of the map parallel to the x-axis
+        private void CreateHorizontalTunnel(int xStart, int xEnd, int yPosition)
+        {
+            for (int x = Math.Min(xStart, xEnd); x <= Math.Max(xStart, xEnd); x++)
+            {
+                CreateFloor(new Point(x, yPosition));
+            }
+        }
+
+        // carve a tunnel using the y-axis
+        private void CreateVerticalTunnel(int yStart, int yEnd, int xPosition)
+        {
+            for (int y = Math.Min(yStart, yEnd); y <= Math.Max(yStart, yEnd); y++)
+            {
+                CreateFloor(new Point(xPosition, y));
+            }
+        }
+
+        // Builds a room composed of walls and floors using the supplied Rectangle
         // which determines its size and position on the map
         // Walls are placed at the perimeter of the room
         // Floors are placed in the interior area of the room

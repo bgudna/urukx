@@ -2,6 +2,7 @@
 using SadConsole;
 using Microsoft.Xna.Framework;
 using Console = SadConsole.Console;
+using SadConsole.Components;
 
 namespace urukx {
 
@@ -16,6 +17,8 @@ namespace urukx {
         private static int _maxRooms = 500;
         private static int _minRoomSize = 4;
         private static int _maxRoomSize = 15;
+
+        private static ScrollingConsole openingConsole;
 
         static void Main() {
             // Setup the engine and create the main window.
@@ -33,7 +36,8 @@ namespace urukx {
 
         private static void createPlayerPlz() {
             player = new Hero(Color.YellowGreen, Color.Transparent);
-            player.Position = new Point(5,5);
+            player.Components.Add(new EntityViewSyncComponent());
+            player.Position = new Point(10,10);
         }
 
         // private static void createFloorsPlz() {
@@ -61,26 +65,35 @@ namespace urukx {
             if ((SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Up)) || (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.K)))
             {
                 player.MoveBy(new Point(0, -1));
+                KeepCameraOnHero(player);
             }
 
             if ((SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down)) || (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.J)))
             {
                 player.MoveBy(new Point(0, 1));
+                KeepCameraOnHero(player);
             }
 
             if ((SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Left)) || (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.H)))
             {
                 player.MoveBy(new Point(-1, 0));
+                KeepCameraOnHero(player);
             }
 
             if ((SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Right)) || (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.L)))
             {
                 player.MoveBy(new Point(1, 0));
+                KeepCameraOnHero(player);
             }
         }
 
         private static void Update(GameTime time) {
             Check4Input();
+        }
+
+        public static void KeepCameraOnHero(Hero hero)
+        {
+            openingConsole.CenterViewPortOnPoint(hero.Position);
         }
 
         static void Init() {
@@ -95,16 +108,21 @@ namespace urukx {
             MapGenerator mapGen = new MapGenerator();
             GameMap = mapGen.GenerateMap(_mapWidth, _mapHeight, _maxRooms, _minRoomSize, _maxRoomSize);
 
-            Console beginConsole = new ScrollingConsole(GameMap.Width, GameMap.Height, Global.FontDefault, new Rectangle(0, 0, width, height), GameMap.Tiles);
+            openingConsole = new ScrollingConsole(GameMap.Width, GameMap.Height, Global.FontDefault, new Rectangle(0, 0, width, height), GameMap.Tiles);
 
 
             // var console = new ScrollingConsole(width, height, Global.FontDefault, new Rectangle(0, 0, width, height), _allTiles);
 
-            SadConsole.Global.CurrentScreen = beginConsole;
+            SadConsole.Global.CurrentScreen = openingConsole;
+
+            // for testing viewport sizes
+            // openingConsole.ViewPort = new Rectangle(0, 0, width - 10, height - 10);
 
             createPlayerPlz();
 
-            beginConsole.Children.Add(player);
+            openingConsole.Children.Add(player);
+
+
         }
     }
 }
