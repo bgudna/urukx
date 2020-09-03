@@ -1,6 +1,8 @@
 using System;
 using Microsoft.Xna.Framework;
 
+// old Actor class
+
 namespace urukx {
 
     public abstract class Being : SadConsole.Entities.Entity {
@@ -25,7 +27,7 @@ namespace urukx {
 
         public bool MoveBy(Point positionChange)
         {
-            if(MainLoop.GameMap.IsTileWalkable(Position + positionChange)) {
+            if(MainLoop.World.CurrentMap.IsTileWalkable(Position + positionChange)) {
                 Position += positionChange;
                 return true;
             } else {
