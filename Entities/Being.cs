@@ -27,7 +27,7 @@ namespace urukx.Entities {
         //    set { _maxHealth = value; }
         //}        
 
-        protected Being(Color foreground, Color background, int glyph, int width = 1, int height = 1) : base(foreground, background, glyph, width, height) 
+        protected Being(Color foreground, Color background, int glyph, int width = 1, int height = 1) : base(foreground, background, glyph) 
         {
             Animation.CurrentFrame[0].Foreground = foreground;
             Animation.CurrentFrame[0].Background = background;
