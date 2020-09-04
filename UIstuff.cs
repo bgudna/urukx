@@ -9,6 +9,7 @@ namespace urukx
     {
         public Window MapWindow;
         public ScrollingConsole MapConsole;
+        public Messages MessageLog;
 
         public UIstuff()
         {
@@ -115,6 +116,27 @@ namespace urukx
         {
             CreateMeSomeConsoles();
             CreateMapWindow(MainLoop.width / 2, MainLoop.height / 2, "OverWorld");
+
+            MessageLog = new Messages(MainLoop.width / 2, MainLoop.height / 2, "Message Log");
+            Children.Add(MessageLog);
+            MessageLog.Show();
+            MessageLog.Position = new Point(0, MainLoop.height / 2);
+
+            MessageLog.Add("Testing 123");
+            MessageLog.Add("Testing 1224");
+            MessageLog.Add("Testing 123");
+            MessageLog.Add("Testing 12543");
+            MessageLog.Add("Testing 123");
+            MessageLog.Add("Testing 1253");
+            MessageLog.Add("Testing 1212");
+            MessageLog.Add("Testing 1");
+            MessageLog.Add("Testing");
+            MessageLog.Add("Testing 122");
+            MessageLog.Add("Testing 51");
+            MessageLog.Add("Testing");
+            MessageLog.Add("Testing 162");
+            MessageLog.Add("Testing 16");
+            MessageLog.Add("Testing Last");
         }
     }
 }
