@@ -37,6 +37,15 @@ namespace urukx.Entities {
         public bool MoveBy(Point positionChange)
         {
             if(MainLoop.World.CurrentMap.IsTileWalkable(Position + positionChange)) {
+
+                NonHero monster = MainLoop.World.CurrentMap.GetEntityAt<NonHero>(Position + positionChange);
+
+                if (monster != null)
+                {
+                    MainLoop.Commands.Attack(this, monster);
+                    return true;
+                }
+                
                 Position += positionChange;
                 return true;
             } else {

@@ -24,6 +24,8 @@ namespace urukx
             CreateMap();
 
             CreatePlayer();
+
+            CreateMonsters();
         }
 
         private void CreateMap()
