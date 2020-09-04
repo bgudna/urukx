@@ -44,25 +44,26 @@ namespace urukx
 
             if ((SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Up)) || (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.K)))
             {
-                MainLoop.World.Player.MoveBy(new Point(0, -1));
+                //MainLoop.World.Player.MoveBy(new Point(0, -1));
+                MainLoop.Commands.MoveBeingBy(MainLoop.World.Player, new Point(0, -1));
                 KeepCameraOnHero(MainLoop.World.Player);
             }
 
             if ((SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Down)) || (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.J)))
             {
-                MainLoop.World.Player.MoveBy(new Point(0, 1));
+                MainLoop.Commands.MoveBeingBy(MainLoop.World.Player, new Point(0, 1));
                 KeepCameraOnHero(MainLoop.World.Player);
             }
 
             if ((SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Left)) || (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.H)))
             {
-                MainLoop.World.Player.MoveBy(new Point(-1, 0));
+                MainLoop.Commands.MoveBeingBy(MainLoop.World.Player, new Point(-1, 0));
                 KeepCameraOnHero(MainLoop.World.Player);
             }
 
             if ((SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Right)) || (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.L)))
             {
-                MainLoop.World.Player.MoveBy(new Point(1, 0));
+                MainLoop.Commands.MoveBeingBy(MainLoop.World.Player, new Point(1, 0));
                 KeepCameraOnHero(MainLoop.World.Player);
             }
         }

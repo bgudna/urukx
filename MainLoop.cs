@@ -12,6 +12,7 @@ namespace urukx {
 
         public static UIstuff UIManager;
         public static World World;
+        public static Commands Commands;
 
         static void Main() {
             // Setup the engine and create the main window.
@@ -33,7 +34,7 @@ namespace urukx {
  
         static void Init() {
             UIManager = new UIstuff();
-
+            Commands = new Commands();
             World = new World();
 
             UIManager.Init();
