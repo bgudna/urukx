@@ -2,6 +2,7 @@
 using SadConsole;
 using System;
 using SadConsole.Controls;
+using urukx.Entities;
 
 namespace urukx
 {
@@ -21,7 +22,15 @@ namespace urukx
 
         public void CreateMeSomeConsoles()
         {
-            MapConsole = new SadConsole.ScrollingConsole(MainLoop.World.CurrentMap.Width, MainLoop.World.CurrentMap.Height, Global.FontDefault, new Rectangle(0, 0, MainLoop.width, MainLoop.height), MainLoop.World.CurrentMap.Tiles);
+            //MapConsole = new SadConsole.ScrollingConsole(MainLoop.World.CurrentMap.Width, MainLoop.World.CurrentMap.Height, Global.FontDefault, new Rectangle(0, 0, MainLoop.width, MainLoop.height), MainLoop.World.CurrentMap.Tiles);
+            MapConsole = new SadConsole.ScrollingConsole(MainLoop.width, MainLoop.height);
+        }
+
+        private void LoadMap(Map map)
+        {
+            MapConsole = new SadConsole.ScrollingConsole(MainLoop.World.CurrentMap.Width, MainLoop.World.CurrentMap.Height, Global.FontDefault, new Rectangle(0, 0, MainLoop.width, MainLoop.height), map.Tiles);
+
+            SyncMapEntities(map);
         }
 
         public void KeepCameraOnHero(Hero hero)
@@ -127,14 +136,44 @@ namespace urukx
             MapWindow.Show();
         }
 
+        // Adds the entire list of entities found in the
+        // World.CurrentMap's Entities SpatialMap to the
+        // MapConsole, so they can be seen onscreen
+        private void SyncMapEntities(Map map)
+        {
+            // remove all Entities from the console first
+            MapConsole.Children.Clear();
+
+            // Now pull all of the entities into the MapConsole in bulk
+            foreach (Entity entity in map.Entities.Items)
+            {
+                MapConsole.Children.Add(entity);
+            }
+
+            // Subscribe to the Entities ItemAdded listener, so we can keep our MapConsole entities in sync
+            map.Entities.ItemAdded += OnMapEntityAdded;
+
+            // Subscribe to the Entities ItemRemoved listener, so we can keep our MapConsole entities in sync
+            map.Entities.ItemRemoved += OnMapEntityRemoved;
+        }
+
+        // Remove an Entity from the MapConsole every time the Map's Entity collection changes
+        public void OnMapEntityRemoved(object sender, GoRogue.ItemEventArgs<Entity> args)
+        {
+            MapConsole.Children.Remove(args.Item);
+        }
+
+        // Add an Entity to the MapConsole every time the Map's Entity collection changes
+        public void OnMapEntityAdded(object sender, GoRogue.ItemEventArgs<Entity> args)
+        {
+            MapConsole.Children.Add(args.Item);
+        }
+
         public void Init()
         {
             CreateMeSomeConsoles();
-            CreateMapWindow(MainLoop.width / 2, MainLoop.height / 2, "OverWorld");
+            MessageLog = new Messages(MainLoop.width / 2, MainLoop.height / 2, "Your progress");
 
-            KeepCameraOnHero(MainLoop.World.Player);
-
-            MessageLog = new Messages(MainLoop.width / 2, MainLoop.height / 2, "Message Log");
             Children.Add(MessageLog);
             MessageLog.Show();
             MessageLog.Position = new Point(0, MainLoop.height / 2);
@@ -143,17 +182,13 @@ namespace urukx
             MessageLog.Add("Testing 1224");
             MessageLog.Add("Testing 123");
             MessageLog.Add("Testing 12543");
-            MessageLog.Add("Testing 123");
-            MessageLog.Add("Testing 1253");
-            MessageLog.Add("Testing 1212");
-            MessageLog.Add("Testing 1");
-            MessageLog.Add("Testing");
-            MessageLog.Add("Testing 122");
-            MessageLog.Add("Testing 51");
-            MessageLog.Add("Testing");
-            MessageLog.Add("Testing 162");
-            MessageLog.Add("Testing 16");
-            MessageLog.Add("Testing Last");
+
+            LoadMap(MainLoop.World.CurrentMap);
+
+            CreateMapWindow(MainLoop.width / 2, MainLoop.height / 2, "OverWorld");
+            UseMouse = true;
+
+            KeepCameraOnHero(MainLoop.World.Player);
         }
     }
 }

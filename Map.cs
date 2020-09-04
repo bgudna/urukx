@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
+using urukx.Entities;
 
 
 namespace urukx 
@@ -15,6 +17,8 @@ namespace urukx
         public int Width { get { return _width; } set { _width = value; }}
         public int Height { get { return _height; } set { _height = value; }}
 
+        public GoRogue.MultiSpatialMap<Entity> Entities; // Keeps track of all the Entities on the map
+        public static GoRogue.IDGenerator IDGenerator = new GoRogue.IDGenerator(); // A static IDGenerator that all Entities can access
 
         //Build a new map with a specified width and height
         public Map(int width, int height)
@@ -22,7 +26,7 @@ namespace urukx
             _width = width;
             _height = height;
             Tiles = new Tiles[width * height];
-
+            Entities = new GoRogue.MultiSpatialMap<Entity>();
         }
 
         public bool IsTileWalkable(Point location)
@@ -33,6 +37,41 @@ namespace urukx
                 return false;
             // then return whether the tile is walkable
             return !_allTiles[location.Y * Width + location.X].IsBlockingMovement;
+        }
+
+        // Checking whether a certain type of
+        // entity is at a specified location the manager's list of entities
+        // and if it exists, return that Entity
+        public T GetEntityAt<T>(Point location) where T : Entity
+        {
+            return Entities.GetItems(location).OfType<T>().FirstOrDefault();
+        }
+
+        // Removes an Entity from the MultiSpatialMap
+        public void Remove(Entity entity)
+        {
+            // remove from SpatialMap
+            Entities.Remove(entity);
+
+            // Link up the entity's Moved event to a new handler
+            entity.Moved -= OnEntityMoved;
+        }
+
+        // Adds an Entity to the MultiSpatialMap
+        public void Add(Entity entity)
+        {
+            // add entity to the SpatialMap
+            Entities.Add(entity, entity.Position);
+
+            // Link up the entity's Moved event to a new handler
+            entity.Moved += OnEntityMoved;
+        }
+
+        // When the Entity's .Moved value changes, it triggers this event handler
+        // which updates the Entity's current position in the SpatialMap
+        private void OnEntityMoved(object sender, Entity.EntityMovedEventArgs args)
+        {
+            Entities.Move(args.Entity as Entity, args.Entity.Position);
         }
 
     }
