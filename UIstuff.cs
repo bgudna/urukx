@@ -66,6 +66,20 @@ namespace urukx
                 MainLoop.Commands.MoveBeingBy(MainLoop.World.Player, new Point(1, 0));
                 KeepCameraOnHero(MainLoop.World.Player);
             }
+
+            // Undo last command: Z
+            if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.Z))
+            {
+                MainLoop.Commands.UndoMoveBeingBy();
+                KeepCameraOnHero(MainLoop.World.Player);
+            }
+
+            // Repeat last command: X
+            if (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.X))
+            {
+                MainLoop.Commands.RedoMoveBeingBy();
+                KeepCameraOnHero(MainLoop.World.Player);
+            }
         }
 
         // Creates a window that encloses a map console
@@ -117,6 +131,8 @@ namespace urukx
         {
             CreateMeSomeConsoles();
             CreateMapWindow(MainLoop.width / 2, MainLoop.height / 2, "OverWorld");
+
+            KeepCameraOnHero(MainLoop.World.Player);
 
             MessageLog = new Messages(MainLoop.width / 2, MainLoop.height / 2, "Message Log");
             Children.Add(MessageLog);

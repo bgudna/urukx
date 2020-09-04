@@ -35,7 +35,17 @@ namespace urukx
         private void CreatePlayer()
         {
             Player = new Hero(Color.Yellow, Color.Transparent);
-            Player.Position = new Point(5, 5);
+            //Player.Position = new Point(5, 5);
+
+            // Place the player on the first non-movement-blocking tile on the map
+            for (int i = 0; i < CurrentMap.Tiles.Length; i++)
+            {
+                if (!CurrentMap.Tiles[i].IsBlockingMovement)
+                {
+                    // Set the player's position to the index of the current map position
+                    Player.Position = SadConsole.Helpers.GetPointFromIndex(i, CurrentMap.Width);
+                }
+            }
 
             // Add the ViewPort sync Component to the player
             Player.Components.Add(new EntityViewSyncComponent());
