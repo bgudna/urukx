@@ -22,10 +22,10 @@ namespace urukx
         public World()
         {
             CreateMap();
-
+            CreateLoot();
+            CreateMonsters();
             CreatePlayer();
 
-            CreateMonsters();
         }
 
         private void CreateMap()
@@ -34,6 +34,41 @@ namespace urukx
             CurrentMap = new Map(_mapWidth, _mapHeight);
             MapGenerator mapGen = new MapGenerator();
             CurrentMap = mapGen.GenerateMap(_mapWidth, _mapHeight, _maxRooms, _minRoomSize, _maxRoomSize);
+        }
+
+        // Create some sample treasure
+        // that can be picked up on the map
+        private void CreateLoot()
+        {
+            // number of treasure drops to create
+            int numLoot = 20;
+
+            Random rndNum = new Random();
+
+            // Produce lot up to a max of numLoot
+            for (int i = 0; i < numLoot; i++)
+            {
+                // Create an Item with some standard attributes
+                int lootPosition = 10;
+                Item newLoot = new Item(Color.Red, Color.Transparent, "Mithrill shirt", 'L', 2);
+
+                // Let SadConsole know that this Item's position be tracked on the map
+                newLoot.Components.Add(new EntityViewSyncComponent());
+
+                // Try placing the Item at lootPosition; if this fails, try random positions on the map's tile array
+                while (CurrentMap.Tiles[lootPosition].IsBlockingMovement)
+                {
+                    // pick a random spot on the map
+                    lootPosition = rndNum.Next(0, CurrentMap.Width * CurrentMap.Height);
+                }
+
+                // set the loot's new position
+                newLoot.Position = new Point(lootPosition % CurrentMap.Width, lootPosition / CurrentMap.Width);
+
+                // add the Item to the MultiSpatialMap
+                CurrentMap.Add(newLoot);
+            }
+
         }
 
         private void CreatePlayer()

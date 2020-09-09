@@ -113,12 +113,12 @@ namespace urukx
             MapConsole.Position = new Point(1, 1);
 
             //close window button
-            Button closeButton = new Button(3, 1);
-            closeButton.Position = new Point(0, 0);
-            closeButton.Text = "[X]";
+            //Button closeButton = new Button(3, 1);
+            //closeButton.Position = new Point(0, 0);
+            //closeButton.Text = "[X]";
 
             //Add the close button to the Window's list of UI elements
-            MapWindow.Add(closeButton);
+            //MapWindow.Add(closeButton);
 
             // Centre the title text at the top of the window
             MapWindow.Title = title.Align(HorizontalAlignment.Center, mapConsoleWidth);
@@ -177,11 +177,6 @@ namespace urukx
             Children.Add(MessageLog);
             MessageLog.Show();
             MessageLog.Position = new Point(0, MainLoop.height / 2);
-
-            MessageLog.Add("Testing 123");
-            MessageLog.Add("Testing 1224");
-            MessageLog.Add("Testing 123");
-            MessageLog.Add("Testing 12543");
 
             LoadMap(MainLoop.World.CurrentMap);
 

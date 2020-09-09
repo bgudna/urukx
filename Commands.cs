@@ -170,16 +170,49 @@ namespace urukx
         // the number of Gold dropped.
         private static void ResolveDeath(Being defender)
         {
+            StringBuilder deathMessage = new StringBuilder($"{defender.Name} died");
+
+            // dump the dead actor's inventory (if any)
+            // at the map position where it died
+            if (defender.Inventory.Count > 0)
+            {
+                deathMessage.Append(" and dropped");
+
+                foreach (Item item in defender.Inventory)
+                {
+                    // move the Item to the place where the actor died
+                    item.Position = defender.Position;
+
+                    // Now let the MultiSpatialMap know that the Item is visible
+                    MainLoop.World.CurrentMap.Add(item);
+
+                    // Append the item to the deathMessage
+                    deathMessage.Append(", " + item.Name);
+                }
+
+                // Clear the actor's inventory. Not strictly
+                // necessary, but makes for good coding habits!
+                defender.Inventory.Clear();
+            }
+            else
+            {
+                // The monster carries no loot, so don't show any loot dropped
+                deathMessage.Append(".");
+            }
+
+            // actor goes bye-bye
             MainLoop.World.CurrentMap.Remove(defender);
 
-            if (defender is Hero)
-            {
-                MainLoop.UIManager.MessageLog.Add($" {defender.Name} was killed.");
-            }
-            else if (defender is NonHero)
-            {
-                MainLoop.UIManager.MessageLog.Add($"{defender.Name} died and dropped {defender.Gold} gold coins.");
-            }
+            // Now show the deathMessage in the messagelog
+            MainLoop.UIManager.MessageLog.Add(deathMessage.ToString());
         }
+
+        public void Pickup(Being actor, Item item)
+        {
+            actor.Inventory.Add(item);
+            MainLoop.UIManager.MessageLog.Add($"{actor.Name} picked up {item.Name}");
+            item.Destroy();
+        }
+
     }
 }

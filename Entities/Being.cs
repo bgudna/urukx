@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 // old Actor class
 
@@ -13,19 +14,7 @@ namespace urukx.Entities {
         public int Defense { get; set; }
         public int DefenseChance { get; set; }
         public int Gold { get; set; }
-
-        //private int _health;
-        //private int _maxHealth;
-
-        //public int Health {
-        //    get { return _health; }
-        //    set { _health = value; }
-        //}
-
-        //public int MaxHealth {
-        //    get { return _maxHealth; }
-        //    set { _maxHealth = value; }
-        //}        
+        public List<Item> Inventory = new List<Item>();
 
         protected Being(Color foreground, Color background, int glyph, int width = 1, int height = 1) : base(foreground, background, glyph) 
         {
@@ -39,13 +28,19 @@ namespace urukx.Entities {
             if(MainLoop.World.CurrentMap.IsTileWalkable(Position + positionChange)) {
 
                 NonHero monster = MainLoop.World.CurrentMap.GetEntityAt<NonHero>(Position + positionChange);
+                
+                Item item = MainLoop.World.CurrentMap.GetEntityAt<Item>(Position + positionChange);
 
                 if (monster != null)
                 {
                     MainLoop.Commands.Attack(this, monster);
                     return true;
+                } else if (item != null)
+                {
+                    MainLoop.Commands.Pickup(this, item);
+                    return true;
                 }
-                
+
                 Position += positionChange;
                 return true;
             } else {
