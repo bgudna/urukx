@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using SadConsole.Components;
 
 namespace urukx.Entities
 {
@@ -16,6 +17,7 @@ namespace urukx.Entities
             Animation.CurrentFrame[0].Glyph = glyph;
 
             ID = Map.IDGenerator.UseID();
+            Components.Add(new EntityViewSyncComponent());
         }
     }
 }

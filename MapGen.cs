@@ -10,6 +10,7 @@ namespace urukx
     // https://roguesharp.wordpress.com/2016/03/26/roguesharp-v3-tutorial-simple-room-generation/
     public class MapGenerator
     {
+        private Random randNum = new Random();
         // empty constructor
         public MapGenerator()
         {
@@ -23,7 +24,7 @@ namespace urukx
             _map = new Map(mapWidth, mapHeight);
 
             // Create a random number generator
-            Random randNum = new Random();
+            
 
             // store a list of the rooms created so far
             List<Rectangle> Rooms = new List<Rectangle>();

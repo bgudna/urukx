@@ -19,6 +19,8 @@ namespace urukx
 
         public Hero Player { get; set; }
 
+        private Random rndNum = new Random();
+
         public World()
         {
             CreateMap();
@@ -43,17 +45,12 @@ namespace urukx
             // number of treasure drops to create
             int numLoot = 20;
 
-            Random rndNum = new Random();
-
             // Produce lot up to a max of numLoot
             for (int i = 0; i < numLoot; i++)
             {
                 // Create an Item with some standard attributes
                 int lootPosition = 10;
                 Item newLoot = new Item(Color.Red, Color.Transparent, "Mithrill shirt", 'L', 2);
-
-                // Let SadConsole know that this Item's position be tracked on the map
-                newLoot.Components.Add(new EntityViewSyncComponent());
 
                 // Try placing the Item at lootPosition; if this fails, try random positions on the map's tile array
                 while (CurrentMap.Tiles[lootPosition].IsBlockingMovement)
@@ -74,8 +71,6 @@ namespace urukx
         private void CreatePlayer()
         {
             Player = new Hero(Color.Yellow, Color.Transparent);
-            Player.Components.Add(new EntityViewSyncComponent());
-            //Player.Position = new Point(5, 5);
 
             // Place the player on the first non-movement-blocking tile on the map
             for (int i = 0; i < CurrentMap.Tiles.Length; i++)
@@ -100,9 +95,6 @@ namespace urukx
             // number of monsters to create
             int numMonsters = 10;
 
-            // random position generator
-            Random rndNum = new Random();
-
             // Create several monsters and 
             // pick a random position on the map to place them.
             // check if the placement spot is blocking (e.g. a wall)
@@ -111,7 +103,6 @@ namespace urukx
             {
                 int monsterPosition = 0;
                 NonHero newMonster = new NonHero(Color.Blue, Color.Transparent);
-                newMonster.Components.Add(new EntityViewSyncComponent());
                 while (CurrentMap.Tiles[monsterPosition].IsBlockingMovement)
                 {
                     // pick a random spot on the map

@@ -7,10 +7,9 @@ namespace urukx.Entities
 {
     public class NonHero : Being
     {
+        private Random rndNum = new Random();
         public NonHero(Color foreground, Color background) : base(foreground, background, 'M')
         {
-            Random rndNum = new Random();
-
             //number of loot to spawn for monster
             int lootNum = rndNum.Next(1, 4);
 

@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace urukx 
+namespace urukx
 {
     public class Tiles4Walls : Tiles 
     {
