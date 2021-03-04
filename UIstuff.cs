@@ -172,15 +172,15 @@ namespace urukx
         public void Init()
         {
             CreateMeSomeConsoles();
-            MessageLog = new Messages(MainLoop.width / 2, MainLoop.height / 2, "Your progress");
+            MessageLog = new Messages(MainLoop.width, 5, "Your progress");
 
             Children.Add(MessageLog);
             MessageLog.Show();
-            MessageLog.Position = new Point(0, MainLoop.height / 2);
+            MessageLog.Position = new Point(0, 20);
 
             LoadMap(MainLoop.World.CurrentMap);
 
-            CreateMapWindow(MainLoop.width / 2, MainLoop.height / 2, "OverWorld");
+            CreateMapWindow(MainLoop.width, MainLoop.height - 5, "OverWorld");
             UseMouse = true;
 
             KeepCameraOnHero(MainLoop.World.Player);
