@@ -9,6 +9,7 @@ running on .net5.0
 - [x] generate maps
 - [x] player setup / movement
 - [x] generate enemies
+- [x] basic combat
 - [ ] generate elements
 - [ ] set up scoring and levels
 - [ ] set up UI
