@@ -10,7 +10,7 @@ running on .net5.0
 - [x] player setup / movement
 - [x] generate enemies
 - [x] basic combat
-- [ ] generate elements
+- [ ] set up inventory
 - [ ] set up scoring and levels
 - [ ] set up UI
 - [ ] set up screens (F1 help screen, Intro/Main, Options)
