@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using urukx;
 
 // old Actor class
 
@@ -39,11 +40,21 @@ namespace urukx.Entities {
                 {
                     MainLoop.Commands.Pickup(this, item);
                     return true;
-                }
+                } 
 
                 Position += positionChange;
                 return true;
             } else {
+
+                 // Check for the presence of a door
+            TileDoor door = MainLoop.World.CurrentMap.GetTileAt<TileDoor>(Position + positionChange);
+            // if there's a door here,
+            // try to use it
+            if (door != null)
+            {
+                MainLoop.Commands.UseDoor(this, door);
+                return true;
+            }
                 return false;
             }
             

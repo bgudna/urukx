@@ -4,7 +4,6 @@ namespace urukx
 {
     public class TileDoor : Tiles
     {
-
         public bool Locked; // Locked door = 1, Unlocked = 0
         public bool IsOpen; // Open door = 1, closed = 0
 

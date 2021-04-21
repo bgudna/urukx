@@ -189,9 +189,9 @@ namespace urukx
         private void CreateRoom(Rectangle room)
         {
             // Place floors in interior area
-            for (int x = room.Left + 1; x < room.Right - 1; x++)
+            for (int x = room.Left + 1; x < room.Right; x++)
             {
-                for (int y = room.Top + 1; y < room.Bottom - 1; y++)
+                for (int y = room.Top + 1; y < room.Bottom; y++)
                 {
                     CreateFloor(new Point(x,y));
                 }

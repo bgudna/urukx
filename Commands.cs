@@ -214,5 +214,22 @@ namespace urukx
             item.Destroy();
         }
 
+        // Triggered when an Actor attempts to move into a doorway.
+        // A closed door opens when used by an Actor.
+        public void UseDoor(Being actor, TileDoor door)
+        {
+            // Handle a locked door
+            if (door.Locked)
+            {
+                // We have no way of opening a locked door for the time being.
+            }
+            // Handled an unlocked door that is closed
+            else if (!door.Locked && !door.IsOpen)
+            {
+                door.Open();
+                MainLoop.UIManager.MessageLog.Add($"{actor.Name} opened a door");
+            }
+        }
+
     }
 }
