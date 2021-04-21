@@ -83,6 +83,12 @@ namespace urukx
                 }
             }
 
+            // Create doors now that the tunnels have been carved out
+            foreach (Rectangle room in Rooms)
+            {
+                CreateDoor(room);
+            }
+
             // spit out the final map
             return _map;
         }
@@ -103,6 +109,77 @@ namespace urukx
             {
                 CreateFloor(new Point(xPosition, y));
             }
+        }
+
+        //Tries to create a TileDoor object in a specified Rectangle
+        //perimeter. Reads through the entire list of tiles comprising
+        //the perimeter, and determines if each position is a viable
+        //candidate for a door.
+        //When it finds a potential position, creates a closed and
+        //unlocked door.
+        private void CreateDoor(Rectangle room)
+        {
+            List<Point> borderCells = GetBorderCellLocations(room);
+
+            //go through every border cell and look for potential door candidates
+            foreach (Point location in borderCells)
+            {
+                int locationIndex = location.ToIndex(_map.Width);
+                if (IsPotentialDoor(location))
+                {
+                    // Create a new door that is closed and unlocked.
+                    TileDoor newDoor = new TileDoor(false, false);
+                    _map.Tiles[locationIndex] = newDoor;
+
+                }
+            }
+        }
+
+        // Determines if a Point on the map is a good
+        // candidate for a door.
+        // Returns true if it's a good spot for a door
+        // Returns false if there is a Tile that IsBlockingMove=true
+        // at that location
+        private bool IsPotentialDoor(Point location)
+        {
+            //if the target location is not walkable
+            //then it's a wall and not a good place for a door
+            int locationIndex = location.ToIndex(_map.Width);
+            if (_map.Tiles[locationIndex] != null && _map.Tiles[locationIndex] is Tiles4Walls)
+            {
+                return false;
+            }
+
+            //store references to all neighbouring cells
+            Point right = new Point(location.X + 1, location.Y);
+            Point left = new Point(location.X - 1, location.Y);
+            Point top = new Point(location.X, location.Y - 1);
+            Point bottom = new Point(location.X, location.Y + 1);
+
+            // check to see if there is a door already in the target
+            // location, or above/below/right/left of the target location
+            // If it detects a door there, return false.
+            if (_map.GetTileAt<TileDoor>(location.X, location.Y) != null ||
+                _map.GetTileAt<TileDoor>(right.X, right.Y) != null ||
+                _map.GetTileAt<TileDoor>(left.X, left.Y) != null ||
+                _map.GetTileAt<TileDoor>(top.X, top.Y) != null ||
+                _map.GetTileAt<TileDoor>(bottom.X, bottom.Y) != null
+               )
+            {
+                return false;
+            }
+
+            //if all the prior checks are okay, make sure that the door is placed along a horizontal wall
+            if (!_map.Tiles[right.ToIndex(_map.Width)].IsBlockingMovement && !_map.Tiles[left.ToIndex(_map.Width)].IsBlockingMovement && _map.Tiles[top.ToIndex(_map.Width)].IsBlockingMovement && _map.Tiles[bottom.ToIndex(_map.Width)].IsBlockingMovement)
+            {
+                return true;
+            }
+            //or make sure that the door is placed along a vertical wall
+            if (_map.Tiles[right.ToIndex(_map.Width)].IsBlockingMovement && _map.Tiles[left.ToIndex(_map.Width)].IsBlockingMovement && !_map.Tiles[top.ToIndex(_map.Width)].IsBlockingMovement && !_map.Tiles[bottom.ToIndex(_map.Width)].IsBlockingMovement)
+            {
+                return true;
+            }
+            return false;
         }
 
         // Builds a room composed of walls and floors using the supplied Rectangle

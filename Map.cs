@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using urukx.Entities;
-
+using SadConsole;
 
 namespace urukx 
 {
@@ -72,6 +72,23 @@ namespace urukx
         private void OnEntityMoved(object sender, Entity.EntityMovedEventArgs args)
         {
             Entities.Move(args.Entity as Entity, args.Entity.Position);
+        }
+
+                 //really snazzy way of checking whether a certain type of
+        //tile is at a specified location in the map's Tiles
+        //and if it exists, return that Tile
+        //accepts an x/y coordinate
+        public T GetTileAt<T>(int x, int y) where T : Tiles
+        {
+            int locationIndex = Helpers.GetIndexFromPoint(x, y, Width);
+            // make sure the index is within the boundaries of the map!
+            if (locationIndex <= Width * Height && locationIndex >= 0)
+            {
+                if (Tiles[locationIndex] is T)
+                    return (T)Tiles[locationIndex];
+                else return null;
+            }
+            else return null;
         }
 
     }
