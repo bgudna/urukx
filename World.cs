@@ -37,6 +37,9 @@ namespace urukx
             CurrentMap = new Map(_mapWidth, _mapHeight);
             MapGenerator mapGen = new MapGenerator();
             CurrentMap = mapGen.GenerateMap(_mapWidth, _mapHeight, _maxRooms, _minRoomSize, _maxRoomSize);
+            
+            // Initialize FOV after tiles are populated
+            CurrentMap.InitializeFOV();
         }
 
         // Create some sample treasure
@@ -74,12 +77,10 @@ namespace urukx
             Player = new Hero(Color.Yellow, Color.Transparent);
             Player.Components.Add(new EntityViewSyncComponent());
 
-            // Place the player on the first non-movement-blocking tile on the map
             for (int i = 0; i < CurrentMap.Tiles.Length; i++)
             {
                 if (!CurrentMap.Tiles[i].IsBlockingMovement)
                 {
-                    // Set the player's position to the index of the current map position
                     Player.Position = SadConsole.Helpers.GetPointFromIndex(i, CurrentMap.Width);
                     break;
                 }
@@ -87,6 +88,8 @@ namespace urukx
 
             CurrentMap.Add(Player);
             
+            // Calculate initial FOV
+            Player.UpdateFOV();
         }
 
         // Create some random monsters with random attack and defense values

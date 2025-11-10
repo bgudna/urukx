@@ -20,6 +20,11 @@ namespace urukx
         public GoRogue.MultiSpatialMap<Entity> Entities; // Keeps track of all the Entities on the map
         public static GoRogue.IDGenerator IDGenerator = new GoRogue.IDGenerator(); // A static IDGenerator that all Entities can access
 
+        // Add FOV system
+        public GoRogue.FOV PlayerFOV;
+        private bool[] _exploredTiles; // Track which tiles have been seen
+        public int FOVRadius = 10; // How far the player can see
+
         //Build a new map with a specified width and height
         public Map(int width, int height)
         {
@@ -27,6 +32,29 @@ namespace urukx
             _height = height;
             Tiles = new Tiles[width * height];
             Entities = new GoRogue.MultiSpatialMap<Entity>();
+            
+            // Initialize explored tiles array
+            _exploredTiles = new bool[width * height];
+        }
+
+        // Initialize FOV after tiles are populated
+        public void InitializeFOV()
+        {
+            PlayerFOV = new GoRogue.FOV(new GoRogue.MapViews.LambdaTranslationMap<Tiles, bool>(
+                new GoRogue.MapViews.ArrayMap<Tiles>(Tiles, _width),
+                tile => tile.IsBlockingLineOfSight));
+            
+            // Hide all tiles initially (they haven't been explored yet)
+            HideAllTiles();
+        }
+
+        // Hide all tiles at startup
+        private void HideAllTiles()
+        {
+            for (int i = 0; i < Tiles.Length; i++)
+            {
+                Tiles[i].UpdateVisibility(false, false);
+            }
         }
 
         public bool IsTileWalkable(Point location)
@@ -74,5 +102,19 @@ namespace urukx
             Entities.Move(args.Entity as Entity, args.Entity.Position);
         }
 
+        public bool IsExplored(int index)
+        {
+            return _exploredTiles[index];
+        }
+
+        public void SetExplored(int index)
+        {
+            _exploredTiles[index] = true;
+        }
+
+        public bool IsInFOV(Point position)
+        {
+            return PlayerFOV.BooleanFOV[position.X, position.Y];
+        }
     }
 }

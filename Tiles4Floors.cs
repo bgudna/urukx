@@ -5,7 +5,7 @@ namespace urukx
 {
     public class Tiles4Floors : Tiles 
     {
-        public Tiles4Floors(bool blockingMovement=false, bool blockingLineOfSight=false) : base(Color.DarkGreen, Color.Transparent, '.', blockingMovement, blockingLineOfSight)
+        public Tiles4Floors(bool blockingMovement=false, bool blockingLineOfSight=false) : base(Color.DarkGray, Color.Transparent, '.', blockingMovement, blockingLineOfSight)
         {
             Name = "Floor";
         }

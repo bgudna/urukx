@@ -41,12 +41,30 @@ namespace urukx
         public override void Update(TimeSpan timeElapsed)
         {
             Check4Input();
+            UpdateEntityVisibility();
             base.Update(timeElapsed);
+        }
+
+        private void UpdateEntityVisibility()
+        {
+            foreach (Entity entity in MainLoop.World.CurrentMap.Entities.Items)
+            {
+                // Always show the player
+                if (entity is Hero)
+                {
+                    entity.IsVisible = true;
+                }
+                else
+                {
+                    // Hide entities outside FOV
+                    entity.IsVisible = MainLoop.World.CurrentMap.IsInFOV(entity.Position);
+                }
+            }
         }
 
         private void Check4Input()
         {
-            if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F5))
+            if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F4))
             {
                 SadConsole.Settings.ToggleFullScreen();
             }
@@ -181,7 +199,7 @@ namespace urukx
             LoadMap(MainLoop.World.CurrentMap);
 
             CreateMapWindow(MainLoop.width, MainLoop.height - 5, "OverWorld");
-            UseMouse = true;
+            UseMouse = false;
 
             KeepCameraOnHero(MainLoop.World.Player);
         }

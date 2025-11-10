@@ -22,7 +22,7 @@ namespace urukx
         public Messages(int width, int height, string title) : base(width, height)
         {
             // Ensure that the window background is the correct colour
-            Theme.FillStyle.Background = DefaultBackground;
+            Theme.FillStyle.Background = Color.Black;
             _lines = new Queue<string>();
             CanDrag = true;
             Title = title.Align(HorizontalAlignment.Center, Width);

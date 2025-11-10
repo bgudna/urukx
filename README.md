@@ -1,6 +1,6 @@
 # urukx
 c# roguelike with sadconsole + xna (monogame)
-running on .net5.0
+running on .net9
 
 ## current status
 
@@ -10,10 +10,13 @@ running on .net5.0
 - [x] player setup / movement
 - [x] generate enemies
 - [x] basic combat
-- [ ] generate elements
-- [ ] set up scoring and levels
-- [ ] set up UI
-- [ ] set up screens (F1 help screen, Intro/Main, Options)
+- [ ] field of view
+- [ ] generate inventory items
+- [ ] set up inventory, scoring and leveling up
+- [ ] set up screens
+- - [ ] help screen (press F1 to access)
+- - [ ] inventory screen
+- - [ ] Intro or Main
+- - [ ] Options
 - [ ] play background audio/music
-- [ ] write + perform background audio/music
 - [ ] generate lore

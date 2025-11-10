@@ -23,7 +23,7 @@ namespace urukx.Entities {
             Animation.CurrentFrame[0].Glyph = glyph;
         }
 
-        public bool MoveBy(Point positionChange)
+        public virtual bool MoveBy(Point positionChange)
         {
             if(MainLoop.World.CurrentMap.IsTileWalkable(Position + positionChange)) {
 
