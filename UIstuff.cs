@@ -52,18 +52,37 @@ namespace urukx
 
         private void UpdateEntityVisibility()
         {
-            foreach (Entity entity in MainLoop.World.CurrentMap.Entities.Items)
+            Map currentMap = MainLoop.World.CurrentMap;
+            
+            foreach (Entity entity in currentMap.Entities.Items)
             {
+                bool shouldBeVisible;
+                
                 // Always show the player
                 if (entity is Hero)
                 {
-                    entity.IsVisible = true;
+                    shouldBeVisible = true;
                 }
                 else
                 {
-                    // Hide entities outside FOV
-                    entity.IsVisible = MainLoop.World.CurrentMap.IsInFOV(entity.Position);
+                    // Only show entities that are currently in FOV
+                    // Items/monsters in unexplored or previously explored areas should be hidden
+                    shouldBeVisible = currentMap.IsInFOV(entity.Position);
                 }
+                
+                // Add or remove from render list based on visibility
+                bool isInMapConsole = MapConsole.Children.Contains(entity);
+                
+                if (shouldBeVisible && !isInMapConsole)
+                {
+                    MapConsole.Children.Add(entity);
+                }
+                else if (!shouldBeVisible && isInMapConsole)
+                {
+                    MapConsole.Children.Remove(entity);
+                }
+                
+                entity.IsVisible = shouldBeVisible;
             }
         }
 

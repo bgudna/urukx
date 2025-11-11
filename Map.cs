@@ -114,6 +114,14 @@ namespace urukx
 
         public bool IsInFOV(Point position)
         {
+            // Check bounds first
+            if (position.X < 0 || position.Y < 0 || position.X >= Width || position.Y >= Height)
+                return false;
+            
+            // Only return true if the FOV has been calculated and the position is in FOV
+            if (PlayerFOV == null || PlayerFOV.BooleanFOV == null)
+                return false;
+                
             return PlayerFOV.BooleanFOV[position.X, position.Y];
         }
     }
