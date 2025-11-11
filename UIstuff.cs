@@ -11,6 +11,10 @@ namespace urukx
         public Window MapWindow;
         public ScrollingConsole MapConsole;
         public Messages MessageLog;
+        
+        private Window InventoryWindow;
+        private ScrollingConsole InventoryConsole;
+        private bool InventoryOpen = false;
 
         public UIstuff()
         {
@@ -42,6 +46,7 @@ namespace urukx
         {
             Check4Input();
             UpdateEntityVisibility();
+            UpdateInventoryDisplay();
             base.Update(timeElapsed);
         }
 
@@ -68,6 +73,17 @@ namespace urukx
             {
                 SadConsole.Settings.ToggleFullScreen();
             }
+
+            // Toggle inventory with "i" key
+            if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.I))
+            {
+                ToggleInventory();
+                return; // Don't process movement if inventory is open
+            }
+
+            // Don't process movement commands if inventory is open
+            if (InventoryOpen)
+                return;
 
             if ((SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.Up)) || (SadConsole.Global.KeyboardState.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.K)))
             {
@@ -185,6 +201,119 @@ namespace urukx
         public void OnMapEntityAdded(object sender, GoRogue.ItemEventArgs<Entity> args)
         {
             MapConsole.Children.Add(args.Item);
+        }
+
+        private void ToggleInventory()
+        {
+            InventoryOpen = !InventoryOpen;
+
+            if (InventoryOpen)
+            {
+                if (InventoryWindow == null)
+                {
+                    CreateInventoryWindow();
+                }
+                InventoryWindow.Show();
+                InventoryWindow.IsFocused = true;
+            }
+            else
+            {
+                if (InventoryWindow != null)
+                {
+                    InventoryWindow.Hide();
+                    InventoryWindow.IsFocused = false;
+                }
+            }
+        }
+
+        private void CreateInventoryWindow()
+        {
+            int width = 40;
+            int height = 20;
+            
+            InventoryWindow = new Window(width, height);
+            InventoryWindow.CanDrag = true;
+            InventoryWindow.Title = "Inventory & Stats".Align(HorizontalAlignment.Center, width - 2);
+
+            // Create content console
+            InventoryConsole = new ScrollingConsole(width - 2, height - 2);
+            InventoryConsole.Position = new Point(1, 1);
+
+            // Add player stats
+            Hero player = MainLoop.World.Player;
+            int cursorY = 0;
+            
+            InventoryConsole.Print(0, cursorY++, $"Name: {player.Name}", Color.White);
+            InventoryConsole.Print(0, cursorY++, $"Health: {player.Health}/{player.MaxHealth}", Color.Red);
+            InventoryConsole.Print(0, cursorY++, $"Attack: {player.Attack}", Color.Orange);
+            InventoryConsole.Print(0, cursorY++, $"Attack Chance: {player.AttackChance}%", Color.Orange);
+            InventoryConsole.Print(0, cursorY++, $"Defense: {player.Defense}", Color.Cyan);
+            InventoryConsole.Print(0, cursorY++, $"Defense Chance: {player.DefenseChance}%", Color.Cyan);
+            InventoryConsole.Print(0, cursorY++, $"Gold: {player.Gold}", Color.Yellow);
+            cursorY++; // blank line
+            InventoryConsole.Print(0, cursorY++, "Inventory:", Color.White);
+            
+            // Add inventory items
+            if (player.Inventory.Count > 0)
+            {
+                foreach (Item item in player.Inventory)
+                {
+                    InventoryConsole.Print(0, cursorY++, $"  - {item.Name}", Color.LimeGreen);
+                }
+            }
+            else
+            {
+                InventoryConsole.Print(0, cursorY++, "  (empty)", Color.DarkGray);
+            }
+
+            cursorY++; // blank line
+            InventoryConsole.Print(0, cursorY++, "Press 'I' to close", Color.Gray);
+
+            InventoryWindow.Children.Add(InventoryConsole);
+            Children.Add(InventoryWindow);
+
+            // Center the window on screen
+            InventoryWindow.Position = new Point(
+                (MainLoop.width - width) / 1,
+                (MainLoop.height - height) / 2
+            );
+        }
+
+        public void UpdateInventoryDisplay()
+        {
+            // Update inventory window if it's open
+            if (InventoryOpen && InventoryWindow != null)
+            {
+                InventoryConsole.Clear();
+                
+                Hero player = MainLoop.World.Player;
+                int cursorY = 0;
+                
+                InventoryConsole.Print(0, cursorY++, $"Name: {player.Name}", Color.White);
+                InventoryConsole.Print(0, cursorY++, $"Health: {player.Health}/{player.MaxHealth}", Color.Red);
+                InventoryConsole.Print(0, cursorY++, $"Attack: {player.Attack}", Color.Orange);
+                InventoryConsole.Print(0, cursorY++, $"Attack Chance: {player.AttackChance}%", Color.Orange);
+                InventoryConsole.Print(0, cursorY++, $"Defense: {player.Defense}", Color.Cyan);
+                InventoryConsole.Print(0, cursorY++, $"Defense Chance: {player.DefenseChance}%", Color.Cyan);
+                InventoryConsole.Print(0, cursorY++, $"Gold: {player.Gold}", Color.Yellow);
+                cursorY++; // blank line
+                InventoryConsole.Print(0, cursorY++, "Inventory:", Color.White);
+                
+                if (player.Inventory.Count > 0)
+                {
+                    foreach (Item item in player.Inventory)
+                    {
+                        InventoryConsole.Print(0, cursorY++, $"  - {item.Name}", Color.LimeGreen);
+                    }
+                }
+                else
+                {
+                    InventoryConsole.Print(0, cursorY++, "  (empty)", Color.DarkGray);
+                }
+
+                cursorY++; // blank line
+                InventoryConsole.Print(0, cursorY++, "Press 'I' to close", Color.Gray);
+            }
         }
 
         public void Init()
