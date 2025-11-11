@@ -11,6 +11,7 @@ namespace urukx
         public Window MapWindow;
         public ScrollingConsole MapConsole;
         public Messages MessageLog;
+        private bool MessageLogOpen = false;
         
         private Window InventoryWindow;
         private ScrollingConsole InventoryConsole;
@@ -91,6 +92,17 @@ namespace urukx
             if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F4))
             {
                 SadConsole.Settings.ToggleFullScreen();
+            }
+
+            if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.F3))
+            {
+                SadConsole.Settings.ResizeMode = SadConsole.Settings.WindowResizeOptions.Scale;                
+            }
+
+            // Toggle message log with "p" key
+            if (SadConsole.Global.KeyboardState.IsKeyReleased(Microsoft.Xna.Framework.Input.Keys.P))
+            {
+                ToggleMessageLog();
             }
 
             // Toggle inventory with "i" key
@@ -222,6 +234,22 @@ namespace urukx
             MapConsole.Children.Add(args.Item);
         }
 
+        private void ToggleMessageLog()
+        {
+            MessageLogOpen = !MessageLogOpen;
+
+            if (MessageLogOpen)
+            {
+                MessageLog.Show();
+                MessageLog.IsFocused = true;
+            }
+            else
+            {
+                MessageLog.Hide();
+                MessageLog.IsFocused = false;
+            }
+        }
+
         private void ToggleInventory()
         {
             InventoryOpen = !InventoryOpen;
@@ -248,7 +276,7 @@ namespace urukx
         private void CreateInventoryWindow()
         {
             int width = 40;
-            int height = 20;
+            int height = 16;
             
             InventoryWindow = new Window(width, height);
             InventoryWindow.CanDrag = true;
@@ -341,12 +369,15 @@ namespace urukx
             MessageLog = new Messages(MainLoop.width, 5, "Your progress");
 
             Children.Add(MessageLog);
-            MessageLog.Show();
-            MessageLog.Position = new Point(0, 20);
+            // Hide the message log at startup
+            MessageLog.Hide();
+            MessageLogOpen = false;
+            MessageLog.Position = new Point(0, 0);
 
             LoadMap(MainLoop.World.CurrentMap);
 
-            CreateMapWindow(MainLoop.width, MainLoop.height - 5, "OverWorld");
+            // Make the map window fill the entire screen
+            CreateMapWindow(MainLoop.width, MainLoop.height, "OverWorld");
             UseMouse = false;
 
             KeepCameraOnHero(MainLoop.World.Player);

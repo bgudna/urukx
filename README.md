@@ -10,10 +10,11 @@ running on .net9
 - [x] player setup / movement
 - [x] generate enemies
 - [x] basic combat
-- [ ] field of view
+- [x] field of view
 - [ ] generate inventory items
 - [ ] set up inventory, scoring and leveling up
 - [ ] set up screens
+- - [ ] character creation screen
 - - [ ] help screen (press F1 to access)
 - - [x] inventory screen
 - - [ ] Intro or Main
