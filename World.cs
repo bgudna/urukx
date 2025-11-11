@@ -88,8 +88,8 @@ namespace urukx
 
             CurrentMap.Add(Player);
             
-            // Calculate initial FOV
-            Player.UpdateFOV();
+            // Calculate initial FOV and show the player in the game world
+            CurrentMap.ShowInitialPlayerFOV(Player.Position);
         }
 
         // Create some random monsters with random attack and defense values

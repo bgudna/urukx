@@ -57,6 +57,25 @@ namespace urukx
             }
         }
 
+        // Make initial player FOV visible at startup
+        public void ShowInitialPlayerFOV(Point playerPosition)
+        {
+            // Calculate FOV from player position
+            PlayerFOV.Calculate(playerPosition, FOVRadius);
+            
+            // Update all tiles based on the calculated FOV
+            for (int i = 0; i < Tiles.Length; i++)
+            {
+                Point tilePos = new Point(i % Width, i / Width);
+                bool inFOV = IsInFOV(tilePos);
+                
+                if (inFOV)
+                    SetExplored(i);
+                
+                Tiles[i].UpdateVisibility(inFOV, IsExplored(i));
+            }
+        }
+
         public bool IsTileWalkable(Point location)
         {
             // first make sure that actor isn't trying to move
